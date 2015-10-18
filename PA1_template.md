@@ -1,12 +1,13 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
+title: 'Reproducible Research: Peer Assessment 1'
 output:
-  pdf_document: 
-  keep_md: true
+  html_document: default
+  keep_md: yes
 ---
 
 
 ## Introduction
+_If you are reading the .md file on github it is possible that you can't see the title rendered as in the html file. This depends on how github renders YAML in the md files._
 
 This assignment makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.
 
@@ -99,6 +100,15 @@ with(stepsByDay,
           )
 )
 mtext("Excuding NAs", side = 3, line = 0)
+abline(v = stepsByDaySummary["Median"],
+       col = "green",
+       lty = 1,
+       lwd = 4)
+legend("topright", 
+       col = c("green"),
+       lty = 1,
+       lwd = 4,
+       legend = "Median")
 ```
 
 ![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
@@ -123,7 +133,11 @@ with(meanStepsByInterval, {
          type = "l",
          col = "red",
          ylab = "Mean Steps",
-         main = "Activity Pattern")
+         main = "Activity Pattern",
+         panel.first = abline(v = seq(0, 2400, 100),
+                            lty = 1,
+                            col = "lightgrey")
+       )
 })
 mtext("Excuding NAs", side = 3, line = 0)
 ```
@@ -224,6 +238,16 @@ with(filledStepsByDay,
           main = "Steps per day histogram")
 )
 mtext("With filled NAs", side = 3, line = 0)
+
+abline(v = filledStepsByDaySummary["Median"],
+       col = "red",
+       lty = 1,
+       lwd = 4)
+legend("topright", 
+       col = c("red"),
+       lty = 1,
+       lwd = 4,
+       legend = "Median")
 ```
 
 ![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15-1.png) 
@@ -234,13 +258,13 @@ meanStepsByDayGrouth = (filledStepsByDaySummary["Mean"] -
 medianStepsByDayGrouth = (filledStepsByDaySummary["Median"] -
                             stepsByDaySummary["Median"]) / stepsByDaySummary["Median"]
 
-c("Mean Growth" = meanStepsByDayGrouth,
-  "Median Growth" = medianStepsByDayGrouth)
+c("Growth % Of" = meanStepsByDayGrouth,
+  "Growth % Of" = medianStepsByDayGrouth)
 ```
 
 ```
-##     Mean Growth.Mean Median Growth.Median 
-##           0.15137909           0.03557692
+##   Growth % Of.Mean Growth % Of.Median 
+##         0.15137909         0.03557692
 ```
 
 The mean of steps per day grows by 15.14% and the median by 
@@ -249,7 +273,7 @@ The mean of steps per day grows by 15.14% and the median by
 From the histogram we can see that days having almost 0 steps due to NA's moved to the bar including the median.
 
 ## Are there differences in activity patterns between weekdays and weekends?
-A `dayCategory` factor will be added to the filled dataset in order to distinguis between weekday and weeend. An utility function `toDayFactor` is defined: it takes a date and returns the corresponding category factor (i.e.: _Weekday_ or _Weekend_).
+A `dayCategory` factor will be added to the filled dataset in order to distinguis between weekday and weeend. An utility function `toDayFactor` is defined: it takes dates and returns the corresponding category factors (i.e.: _Weekday_ or _Weekend_).
 
 ```r
 toDayFactor = function(date) {
@@ -272,7 +296,7 @@ filledActivity =  mutate(filledActivity,
 `wMeanStepsByInterval` is the similar to `meanStepsByInterval` from the activity pattern section. Differenses are:
 
 - it is calculated on the filled dataset
-- it is also grouped by `dayCategory` and then by `interval`
+- it is first grouped by `dayCategory` and then by `interval`
 
 
 ```r

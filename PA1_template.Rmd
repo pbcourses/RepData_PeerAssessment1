@@ -81,7 +81,7 @@ and the **median** is
 **`r format(stepsByDaySummary["Median"], digits = 6)`**
 
 Now the histogram of the total number of steps taken each day can be shown.
-```{r, echo= TRUE}
+```{r, echo= TRUE, fig.width= 12}
 with(stepsByDay, 
      hist(totalSteps,
           breaks=seq(0, 25000, by = 1000),
@@ -91,6 +91,16 @@ with(stepsByDay,
           )
 )
 mtext("Excuding NAs", side = 3, line = 0)
+abline(v = stepsByDaySummary["Median"],
+       col = "green",
+       lty = 1,
+       lwd = 4)
+legend("topright", 
+       col = c("green"),
+       lty = 1,
+       lwd = 4,
+       legend = "Median")
+
 ```
 
 Breakpoints every 1000 steps emphasize the amount of days with almost zero steps. Thus the first bar gives us a hint about the possible impact of NA's.
@@ -105,15 +115,20 @@ meanStepsByInterval = group_by(activity, interval) %>%
 ```
 
 The activity pattern (mean steps by interval) can be plotted:
-```{r, echo=TRUE}
+```{r, echo=TRUE, fig.width= 12}
 with(meanStepsByInterval, {
     plot(interval, meanSteps,
          type = "l",
          col = "red",
          ylab = "Mean Steps",
-         main = "Activity Pattern")
+         main = "Activity Pattern",
+         panel.first = abline(v = seq(0, 2400, 100),
+                            lty = 1,
+                            col = "lightgrey")
+       )
 })
 mtext("Excuding NAs", side = 3, line = 0)
+
 ```
 
 The 5-minute interval, on average across all the days in the dataset, that contains the maximum number of steps can be calculated: `meanStepsByInterval` is filtered by the rows in which `meanSteps` corresponds to the `max(meanSteps)`.
@@ -168,7 +183,7 @@ and the **median** is
 **`r format(filledStepsByDaySummary["Median"], digits = 6)`**
 
 The histogram corresponding to the filled dataset can be shown.
-```{r, echo=TRUE}
+```{r, echo=TRUE, fig.width= 12}
 with(filledStepsByDay, 
      hist(totalSteps,
           breaks=seq(0, 25000, by = 1000),
@@ -178,13 +193,23 @@ with(filledStepsByDay,
 )
 mtext("With filled NAs", side = 3, line = 0)
 
+abline(v = filledStepsByDaySummary["Median"],
+       col = "red",
+       lty = 1,
+       lwd = 4)
+legend("topright", 
+       col = c("red"),
+       lty = 1,
+       lwd = 4,
+       legend = "Median")
+
 meanStepsByDayGrouth = (filledStepsByDaySummary["Mean"] -
                         stepsByDaySummary["Mean"]) / stepsByDaySummary["Mean"]
 medianStepsByDayGrouth = (filledStepsByDaySummary["Median"] -
                             stepsByDaySummary["Median"]) / stepsByDaySummary["Median"]
 
-c("Mean Growth" = meanStepsByDayGrouth,
-  "Median Growth" = medianStepsByDayGrouth)
+c("Growth % Of" = meanStepsByDayGrouth,
+  "Growth % Of" = medianStepsByDayGrouth)
 ```
 
 The mean of steps per day grows by `r round(meanStepsByDayGrouth * 100, 2)`% and the median by 
@@ -193,7 +218,7 @@ The mean of steps per day grows by `r round(meanStepsByDayGrouth * 100, 2)`% and
 From the histogram we can see that days having almost 0 steps due to NA's moved to the bar including the median.
 
 ## Are there differences in activity patterns between weekdays and weekends?
-A `dayCategory` factor will be added to the filled dataset in order to distinguis between weekday and weeend. An utility function `toDayFactor` is defined: it takes a date and returns the corresponding category factor (i.e.: _Weekday_ or _Weekend_).
+A `dayCategory` factor will be added to the filled dataset in order to distinguis between weekday and weeend. An utility function `toDayFactor` is defined: it takes dates and returns the corresponding category factors (i.e.: _Weekday_ or _Weekend_).
 ```{r, echo=TRUE}
 
 
@@ -216,7 +241,7 @@ filledActivity =  mutate(filledActivity,
 `wMeanStepsByInterval` is the similar to `meanStepsByInterval` from the activity pattern section. Differenses are:
 
 - it is calculated on the filled dataset
-- it is also grouped by `dayCategory` and then by `interval`
+- it is first grouped by `dayCategory` and then by `interval`
 
 ```{r, echo=TRUE}
 wMeanStepsByInterval = filledActivity %>% 
