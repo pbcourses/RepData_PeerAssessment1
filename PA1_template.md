@@ -258,13 +258,13 @@ meanStepsByDayGrouth = (filledStepsByDaySummary["Mean"] -
 medianStepsByDayGrouth = (filledStepsByDaySummary["Median"] -
                             stepsByDaySummary["Median"]) / stepsByDaySummary["Median"]
 
-c("Growth % Of" = meanStepsByDayGrouth,
-  "Growth % Of" = medianStepsByDayGrouth)
+c("Growth % Of" = meanStepsByDayGrouth * 100,
+  "Growth % Of" = medianStepsByDayGrouth * 100)
 ```
 
 ```
 ##   Growth % Of.Mean Growth % Of.Median 
-##         0.15137909         0.03557692
+##          15.137909           3.557692
 ```
 
 The mean of steps per day grows by 15.14% and the median by 

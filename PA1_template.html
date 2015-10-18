@@ -220,10 +220,10 @@ legend(&quot;topright&quot;,
 medianStepsByDayGrouth = (filledStepsByDaySummary[&quot;Median&quot;] -
                             stepsByDaySummary[&quot;Median&quot;]) / stepsByDaySummary[&quot;Median&quot;]
 
-c(&quot;Growth % Of&quot; = meanStepsByDayGrouth,
-  &quot;Growth % Of&quot; = medianStepsByDayGrouth)</code></pre>
+c(&quot;Growth % Of&quot; = meanStepsByDayGrouth * 100,
+  &quot;Growth % Of&quot; = medianStepsByDayGrouth * 100)</code></pre>
 <pre><code>##   Growth % Of.Mean Growth % Of.Median 
-##         0.15137909         0.03557692</code></pre>
+##          15.137909           3.557692</code></pre>
 <p>The mean of steps per day grows by 15.14% and the median by 3.56%</p>
 <p>From the histogram we can see that days having almost 0 steps due to NA’s moved to the bar including the median.</p>
 </div>
